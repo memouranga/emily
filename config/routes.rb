@@ -15,6 +15,6 @@ Emily::Engine.routes.draw do
   # Admin
   namespace :admin do
     resources :knowledge_articles
-    resource :analytics, only: [ :index ], controller: "analytics"
+    resource :analytics, only: [ :show ], controller: "analytics"
   end
 end

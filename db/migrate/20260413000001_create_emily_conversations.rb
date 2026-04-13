@@ -5,7 +5,7 @@ class CreateEmilyConversations < ActiveRecord::Migration[7.1]
       t.references :user, polymorphic: true, index: true # nil = visitor (sales), present = customer (support)
       t.string :status, default: "open", null: false     # open, resolved, escalated
       t.string :phase, default: "sales", null: false      # sales, support
-      t.jsonb :metadata, default: {}                      # location, page, referrer, etc.
+      t.json :metadata                                     # location, page, referrer, etc.
       t.timestamps
     end
   end

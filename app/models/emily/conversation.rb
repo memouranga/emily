@@ -9,6 +9,8 @@ module Emily
 
     validates :session_id, presence: true
 
+    serialize :metadata, coder: JSON
+
     scope :active, -> { where(status: :open) }
 
     after_create_commit -> { Emily::Events.publish(:conversation_started, conversation: self) }

@@ -71,7 +71,7 @@ module Emily
     end
 
     def call_llm(messages)
-      chat = RubyLLM.chat(model: @config.llm_model)
+      chat = ::RubyLLM.chat(model: @config.llm_model)
 
       system_msg = messages.shift
       chat.with_instructions(system_msg[:content])

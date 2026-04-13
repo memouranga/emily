@@ -4,7 +4,7 @@
 
 <div class="emily-chat-widget <%= 'emily-chat-widget--bottom-left' if position == :bottom_left %>"
      data-controller="emily-chat"
-     data-emily-chat-url-value="<%= emily.conversations_path %>"
+     data-emily-chat-url-value="<%= emily.conversations_path(locale: nil) %>"
      data-emily-chat-bot-name-value="<%= bot_name %>"
      data-emily-chat-flow-value="<%= (config&.conversation_flow || {}).to_json %>">
 
