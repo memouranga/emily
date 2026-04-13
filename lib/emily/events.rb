@@ -14,6 +14,7 @@ module Emily
     #   emily.ticket_created        — payload: { ticket:, conversation: }
     #   emily.ticket_updated        — payload: { ticket: }
     #   emily.escalation            — payload: { ticket:, conversation: }
+    #   emily.message_rated         — payload: { rating:, message: }
 
     def self.publish(event_name, **payload)
       ActiveSupport::Notifications.instrument("emily.#{event_name}", **payload)

@@ -1,53 +1,74 @@
 Emily.configure do |config|
-  # LLM provider (:anthropic, :openai, etc.)
+  # === LLM ===
+  # Provider and model (via RubyLLM — supports Anthropic, OpenAI, etc.)
   config.llm_provider = :anthropic
-
-  # Model to use
   config.llm_model = "claude-sonnet-4-5-20250514"
-
-  # API key (use Rails credentials or ENV)
   config.api_key = Rails.application.credentials.dig(:anthropic, :api_key) || ENV["ANTHROPIC_API_KEY"]
 
-  # Bot display name
+  # === Bot ===
   config.bot_name = "Emily"
+  # config.bot_avatar_url = "/path/to/avatar.png"
+  # config.bot_greeting = "Hi! How can I help you?"  # nil = use i18n default
 
-  # Greeting message for new conversations
-  config.bot_greeting = "Hi! How can I help you today?"
-
-  # System prompt for visitors (sales mode)
+  # === Prompts ===
   config.sales_prompt = "You are a helpful sales assistant. Help visitors understand the product and qualify leads."
-
-  # System prompt for authenticated users (support mode)
   config.support_prompt = "You are a helpful support assistant. Help users resolve issues using the knowledge base."
 
-  # Create tickets when AI can't resolve
+  # === User detection ===
+  # Works with any auth system (Devise, custom, Auth0, etc.)
+  config.user_class = "User"
+  # config.current_user_method = :current_user
+
+  # === Admin auth ===
+  # Protect /emily/admin routes. Runs in controller context.
+  # config.admin_authenticate = -> { redirect_to main_app.root_path unless current_user&.admin? }
+
+  # === Tickets ===
   config.escalation_enabled = true
 
-  # External knowledge providers — connect your app's models to Emily's RAG.
-  # Each provider is a lambda or object that responds to .search(query)
-  # and returns an array of { title:, content:, source: } hashes.
+  # === Knowledge providers ===
+  # Connect your app's models to Emily's RAG (in addition to Emily's own KnowledgeArticles).
+  # Each provider is a lambda that receives a query and returns [{ title:, content:, source: }]
   #
   # config.knowledge_providers = [
   #   -> (query) {
   #     Video.search(query).limit(3).map { |v|
   #       { title: v.title, content: v.transcript, source: v.youtube_url }
   #     }
-  #   },
-  #   -> (query) {
-  #     Course.search(query).limit(3).map { |c|
-  #       { title: c.name, content: c.description, source: nil }
-  #     }
   #   }
   # ]
   config.knowledge_providers = []
 
-  # User model class name — Emily uses this to identify authenticated users
-  # Works with any auth system (Devise, custom, etc.) as long as current_user exists
-  config.user_class = "User"
+  # === Conversation flow ===
+  # Decision tree for guided conversations. User picks options before AI takes over.
+  #
+  # config.conversation_flow = {
+  #   greeting: "How can I help you?",
+  #   options: [
+  #     {
+  #       label: "Learn about services",
+  #       next: {
+  #         greeting: "What type of project?",
+  #         options: [
+  #           { label: "Web app", tag: "lead:web" },
+  #           { label: "Mobile", tag: "lead:mobile" }
+  #         ]
+  #       }
+  #     },
+  #     { label: "Technical support", tag: "support" },
+  #     { label: "Talk to someone", tag: "escalate" }
+  #   ]
+  # }
 
-  # Method to get the current user from the controller (default: :current_user)
-  # config.current_user_method = :current_user
+  # === UI ===
+  # config.layout = "application"        # Use your app's layout instead of Emily's
+  # config.widget_position = :bottom_right  # :bottom_right or :bottom_left
+  # config.sound_enabled = true
 
-  # Layout — nil uses Emily's default, set to "application" to use your app's layout
-  # config.layout = "application"
+  # === Theme ===
+  # Override CSS variables to match your brand. Example:
+  # config.theme = { primary: "#e11d48", primary_hover: "#be123c" }
+
+  # === Rate limiting ===
+  config.rate_limit = { max_messages: 30, period: 60 }
 end

@@ -16,7 +16,7 @@ module Emily
     def broadcast_message
       ActionCable.server.broadcast(
         "emily_conversation_#{conversation.id}",
-        { role: role, content: content, created_at: created_at }
+        { role: role, content: content, message_id: id, created_at: created_at }
       )
     end
 

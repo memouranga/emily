@@ -17,7 +17,9 @@ module Emily
                   :widget_position,     # :bottom_right, :bottom_left (default: :bottom_right)
                   :theme,               # Hash of CSS variable overrides
                   :conversation_flow,   # Decision tree for guided conversations
-                  :bot_avatar_url       # URL or path to bot avatar image
+                  :bot_avatar_url,      # URL or path to bot avatar image
+                  :rate_limit,          # { max_messages: 30, period: 60 }
+                  :sound_enabled        # Play notification sound (default: true)
 
     def initialize
       @llm_provider = :anthropic
@@ -38,6 +40,8 @@ module Emily
       @theme = {}
       @conversation_flow = nil
       @bot_avatar_url = nil
+      @rate_limit = { max_messages: 30, period: 60 }
+      @sound_enabled = true
     end
   end
 end
