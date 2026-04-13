@@ -1,12 +1,51 @@
 /* Emily — Default styles (override in host app or run: rails generate emily:views) */
 
+/* ========== CSS Variables (customize these to theme Emily) ========== */
+:root {
+  --emily-primary: #2563eb;
+  --emily-primary-hover: #1d4ed8;
+  --emily-bg: #ffffff;
+  --emily-text: #1a1a1a;
+  --emily-text-secondary: #666666;
+  --emily-text-muted: #999999;
+  --emily-border: #e8e8e8;
+  --emily-surface: #f0f0f0;
+  --emily-surface-hover: #e0e0e0;
+  --emily-surface-alt: #fafafa;
+  --emily-success: #16a34a;
+  --emily-warning: #d97706;
+  --emily-danger: #dc2626;
+  --emily-radius: 0.5rem;
+  --emily-radius-lg: 0.75rem;
+  --emily-radius-full: 2rem;
+  --emily-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --emily-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --emily-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --emily-bg: #1a1a1a;
+    --emily-text: #e8e8e8;
+    --emily-text-secondary: #999999;
+    --emily-text-muted: #777777;
+    --emily-border: #333333;
+    --emily-surface: #2a2a2a;
+    --emily-surface-hover: #333333;
+    --emily-surface-alt: #222222;
+    --emily-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --emily-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4);
+  }
+}
+
 /* ========== Base ========== */
 .emily-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: #1a1a1a;
+  font-family: var(--emily-font);
+  color: var(--emily-text);
   line-height: 1.6;
 }
 
@@ -23,7 +62,7 @@
 }
 
 .emily-faqs__header p {
-  color: #666;
+  color: var(--emily-text-secondary);
   font-size: 1.1rem;
 }
 
@@ -37,16 +76,16 @@
 
 .emily-faqs__category-link {
   padding: 0.4rem 1rem;
-  border-radius: 2rem;
-  background: #f0f0f0;
-  color: #333;
+  border-radius: var(--emily-radius-full);
+  background: var(--emily-surface);
+  color: var(--emily-text);
   text-decoration: none;
   font-size: 0.9rem;
   transition: background 0.2s;
 }
 
 .emily-faqs__category-link:hover {
-  background: #e0e0e0;
+  background: var(--emily-surface-hover);
 }
 
 .emily-faqs__section {
@@ -58,14 +97,15 @@
   font-weight: 600;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--emily-surface);
 }
 
 .emily-faqs__item {
-  border: 1px solid #e8e8e8;
-  border-radius: 0.5rem;
+  border: 1px solid var(--emily-border);
+  border-radius: var(--emily-radius);
   margin-bottom: 0.5rem;
   overflow: hidden;
+  background: var(--emily-bg);
 }
 
 .emily-faqs__question {
@@ -80,13 +120,13 @@
 }
 
 .emily-faqs__question:hover {
-  background: #fafafa;
+  background: var(--emily-surface-alt);
 }
 
 .emily-faqs__question::after {
   content: "+";
   font-size: 1.2rem;
-  color: #999;
+  color: var(--emily-text-muted);
   transition: transform 0.2s;
 }
 
@@ -96,13 +136,13 @@ details[open] .emily-faqs__question::after {
 
 .emily-faqs__answer {
   padding: 0 1.25rem 1rem;
-  color: #444;
+  color: var(--emily-text-secondary);
 }
 
 .emily-faqs__source {
   display: inline-block;
   margin-top: 0.5rem;
-  color: #2563eb;
+  color: var(--emily-primary);
   text-decoration: none;
   font-size: 0.9rem;
 }
@@ -117,14 +157,19 @@ details[open] .emily-faqs__question::after {
   bottom: 1.5rem;
   right: 1.5rem;
   z-index: 9999;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--emily-font);
+}
+
+.emily-chat-widget--bottom-left {
+  right: auto;
+  left: 1.5rem;
 }
 
 .emily-chat-widget__toggle {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #2563eb;
+  background: var(--emily-primary);
   color: white;
   border: none;
   cursor: pointer;
@@ -132,13 +177,34 @@ details[open] .emily-faqs__question::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s, background 0.2s;
+  box-shadow: var(--emily-shadow);
+  transition: transform 0.3s ease, background 0.2s;
+  position: relative;
 }
 
 .emily-chat-widget__toggle:hover {
   transform: scale(1.05);
-  background: #1d4ed8;
+  background: var(--emily-primary-hover);
+}
+
+.emily-chat-widget__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--emily-danger);
+  color: white;
+  font-size: 0.7rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.emily-chat-widget__badge--visible {
+  display: flex;
 }
 
 .emily-chat-widget__window {
@@ -147,13 +213,30 @@ details[open] .emily-faqs__question::after {
   right: 0;
   width: 380px;
   max-height: 500px;
-  background: white;
+  background: var(--emily-bg);
   border-radius: 1rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--emily-shadow-lg);
   display: none;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--emily-border);
+  animation: emily-slide-up 0.3s ease;
+}
+
+.emily-chat-widget--bottom-left .emily-chat-widget__window {
+  right: auto;
+  left: 0;
+}
+
+@keyframes emily-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .emily-chat-widget__window--open {
@@ -162,12 +245,37 @@ details[open] .emily-faqs__question::after {
 
 .emily-chat-widget__header {
   padding: 1rem 1.25rem;
-  background: #2563eb;
+  background: var(--emily-primary);
   color: white;
   font-weight: 600;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.emily-chat-widget__header-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emily-chat-widget__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.emily-chat-widget__avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .emily-chat-widget__close {
@@ -177,6 +285,7 @@ details[open] .emily-faqs__question::after {
   font-size: 1.2rem;
   cursor: pointer;
   opacity: 0.8;
+  transition: opacity 0.2s;
 }
 
 .emily-chat-widget__close:hover {
@@ -189,11 +298,18 @@ details[open] .emily-faqs__question::after {
   padding: 1rem;
   min-height: 300px;
   max-height: 350px;
+  background: var(--emily-bg);
 }
 
 .emily-chat-widget__message {
   margin-bottom: 0.75rem;
   display: flex;
+  animation: emily-fade-in 0.3s ease;
+}
+
+@keyframes emily-fade-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .emily-chat-widget__message--user {
@@ -213,58 +329,144 @@ details[open] .emily-faqs__question::after {
 }
 
 .emily-chat-widget__message--user .emily-chat-widget__bubble {
-  background: #2563eb;
+  background: var(--emily-primary);
   color: white;
   border-bottom-right-radius: 0.25rem;
 }
 
 .emily-chat-widget__message--assistant .emily-chat-widget__bubble {
-  background: #f0f0f0;
-  color: #1a1a1a;
+  background: var(--emily-surface);
+  color: var(--emily-text);
   border-bottom-left-radius: 0.25rem;
+}
+
+/* Rating buttons */
+.emily-chat-widget__rating {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding-left: 0.25rem;
+}
+
+.emily-chat-widget__rating button {
+  background: none;
+  border: 1px solid var(--emily-border);
+  border-radius: var(--emily-radius-full);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--emily-text-secondary);
+  transition: all 0.2s;
+}
+
+.emily-chat-widget__rating button:hover {
+  border-color: var(--emily-primary);
+  color: var(--emily-primary);
+}
+
+.emily-chat-widget__rating button.rated {
+  background: var(--emily-primary);
+  color: white;
+  border-color: var(--emily-primary);
+}
+
+/* Conversation flow options */
+.emily-chat-widget__flow-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.emily-chat-widget__flow-option {
+  background: var(--emily-bg);
+  border: 1px solid var(--emily-primary);
+  color: var(--emily-primary);
+  border-radius: var(--emily-radius-full);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.emily-chat-widget__flow-option:hover {
+  background: var(--emily-primary);
+  color: white;
 }
 
 .emily-chat-widget__input {
   display: flex;
   padding: 0.75rem;
-  border-top: 1px solid #e8e8e8;
+  border-top: 1px solid var(--emily-border);
   gap: 0.5rem;
+  background: var(--emily-bg);
 }
 
 .emily-chat-widget__input input {
   flex: 1;
   padding: 0.6rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 2rem;
+  border: 1px solid var(--emily-border);
+  border-radius: var(--emily-radius-full);
   font-size: 0.9rem;
   outline: none;
+  background: var(--emily-bg);
+  color: var(--emily-text);
+  transition: border-color 0.2s;
 }
 
 .emily-chat-widget__input input:focus {
-  border-color: #2563eb;
+  border-color: var(--emily-primary);
 }
 
 .emily-chat-widget__input button {
   padding: 0.6rem 1rem;
-  background: #2563eb;
+  background: var(--emily-primary);
   color: white;
   border: none;
-  border-radius: 2rem;
+  border-radius: var(--emily-radius-full);
   cursor: pointer;
   font-size: 0.9rem;
   transition: background 0.2s;
 }
 
 .emily-chat-widget__input button:hover {
-  background: #1d4ed8;
+  background: var(--emily-primary-hover);
 }
 
+/* Typing indicator */
 .emily-chat-widget__typing {
   padding: 0.5rem 1rem;
-  color: #999;
+  color: var(--emily-text-muted);
   font-size: 0.8rem;
-  font-style: italic;
   display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emily-chat-widget__typing--visible {
+  display: flex;
+}
+
+.emily-chat-widget__typing-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.emily-chat-widget__typing-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--emily-text-muted);
+  animation: emily-typing 1.4s infinite;
+}
+
+.emily-chat-widget__typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.emily-chat-widget__typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes emily-typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
 }
 
 /* ========== Analytics Dashboard ========== */
@@ -293,20 +495,20 @@ details[open] .emily-faqs__question::after {
 
 .emily-analytics__period-link {
   padding: 0.4rem 0.8rem;
-  border-radius: 0.5rem;
+  border-radius: var(--emily-radius);
   text-decoration: none;
   font-size: 0.85rem;
-  color: #666;
-  background: #f0f0f0;
+  color: var(--emily-text-secondary);
+  background: var(--emily-surface);
   transition: all 0.2s;
 }
 
 .emily-analytics__period-link:hover {
-  background: #e0e0e0;
+  background: var(--emily-surface-hover);
 }
 
 .emily-analytics__period-link--active {
-  background: #2563eb;
+  background: var(--emily-primary);
   color: white;
 }
 
@@ -318,9 +520,9 @@ details[open] .emily-faqs__question::after {
 }
 
 .emily-analytics__card {
-  background: white;
-  border: 1px solid #e8e8e8;
-  border-radius: 0.75rem;
+  background: var(--emily-bg);
+  border: 1px solid var(--emily-border);
+  border-radius: var(--emily-radius-lg);
   padding: 1.5rem;
   text-align: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -330,13 +532,13 @@ details[open] .emily-faqs__question::after {
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--emily-text);
 }
 
 .emily-analytics__card-label {
   display: block;
   font-size: 0.85rem;
-  color: #666;
+  color: var(--emily-text-secondary);
   margin-top: 0.25rem;
 }
 
@@ -349,7 +551,7 @@ details[open] .emily-faqs__question::after {
   font-weight: 600;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--emily-surface);
 }
 
 .emily-analytics__grid {
@@ -359,9 +561,9 @@ details[open] .emily-faqs__question::after {
 }
 
 .emily-analytics__stat {
-  background: #fafafa;
-  border: 1px solid #e8e8e8;
-  border-radius: 0.5rem;
+  background: var(--emily-surface-alt);
+  border: 1px solid var(--emily-border);
+  border-radius: var(--emily-radius);
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -370,7 +572,7 @@ details[open] .emily-faqs__question::after {
 
 .emily-analytics__stat-label {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--emily-text-secondary);
 }
 
 .emily-analytics__stat-value {
@@ -378,23 +580,25 @@ details[open] .emily-faqs__question::after {
   font-weight: 600;
 }
 
-.emily-analytics__stat-value--success {
-  color: #16a34a;
-}
+.emily-analytics__stat-value--success { color: var(--emily-success); }
+.emily-analytics__stat-value--warning { color: var(--emily-warning); }
+.emily-analytics__stat-value--danger { color: var(--emily-danger); }
 
-.emily-analytics__stat-value--warning {
-  color: #d97706;
-}
-
-.emily-analytics__stat-value--danger {
-  color: #dc2626;
-}
-
-/* Responsive */
+/* ========== Responsive ========== */
 @media (max-width: 480px) {
   .emily-chat-widget__window {
     width: calc(100vw - 2rem);
     right: -0.5rem;
     bottom: 65px;
+  }
+
+  .emily-chat-widget--bottom-left .emily-chat-widget__window {
+    left: -0.5rem;
+  }
+
+  .emily-analytics__header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
   }
 }

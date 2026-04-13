@@ -1,7 +1,7 @@
 <div class="emily-faqs">
   <header class="emily-faqs__header">
-    <h1>Frequently Asked Questions</h1>
-    <p>Find answers to common questions below.</p>
+    <h1><%= t('emily.faqs.title') %></h1>
+    <p><%= t('emily.faqs.subtitle') %></p>
   </header>
 
   <% if @categories.any? %>
@@ -23,7 +23,7 @@
               <div class="emily-faqs__answer">
                 <%= faq.rendered_content %>
                 <% if faq.source_url.present? %>
-                  <a href="<%= faq.source_url %>" target="_blank" rel="noopener" class="emily-faqs__source">Learn more</a>
+                  <a href="<%= faq.source_url %>" target="_blank" rel="noopener" class="emily-faqs__source"><%= t('emily.faqs.learn_more') %></a>
                 <% end %>
               </div>
             </details>
@@ -37,7 +37,7 @@
           <div class="emily-faqs__answer">
             <%= faq.rendered_content %>
             <% if faq.source_url.present? %>
-              <a href="<%= faq.source_url %>" target="_blank" rel="noopener" class="emily-faqs__source">Learn more</a>
+              <a href="<%= faq.source_url %>" target="_blank" rel="noopener" class="emily-faqs__source"><%= t('emily.faqs.learn_more') %></a>
             <% end %>
           </div>
         </details>

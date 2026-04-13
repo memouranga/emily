@@ -7,5 +7,9 @@ module Emily
         helper Emily::ApplicationHelper
       end
     end
+
+    initializer "emily.i18n" do
+      config.i18n.load_path += Dir[Emily::Engine.root.join("config/locales/**/*.yml")]
+    end
   end
 end

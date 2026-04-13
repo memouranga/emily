@@ -1,16 +1,35 @@
-<div class="emily-chat-widget" data-controller="emily-chat" data-emily-chat-url-value="<%= emily.conversations_path %>">
+<% config = Emily.configuration %>
+<% bot_name = config&.bot_name || "Emily" %>
+<% position = config&.widget_position || :bottom_right %>
+
+<div class="emily-chat-widget <%= 'emily-chat-widget--bottom-left' if position == :bottom_left %>"
+     data-controller="emily-chat"
+     data-emily-chat-url-value="<%= emily.conversations_path %>"
+     data-emily-chat-bot-name-value="<%= bot_name %>"
+     data-emily-chat-flow-value="<%= (config&.conversation_flow || {}).to_json %>">
+
   <%# Toggle button %>
-  <button class="emily-chat-widget__toggle" data-action="click->emily-chat#toggle" aria-label="Open chat">
+  <button class="emily-chat-widget__toggle" data-action="click->emily-chat#toggle" aria-label="<%= t('emily.chat.open') %>">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
     </svg>
+    <span class="emily-chat-widget__badge" data-emily-chat-target="badge"></span>
   </button>
 
   <%# Chat window %>
   <div class="emily-chat-widget__window" data-emily-chat-target="window">
     <div class="emily-chat-widget__header">
-      <span><%= Emily.configuration&.bot_name || "Emily" %></span>
-      <button class="emily-chat-widget__close" data-action="click->emily-chat#toggle" aria-label="Close chat">&times;</button>
+      <div class="emily-chat-widget__header-info">
+        <div class="emily-chat-widget__avatar">
+          <% if config&.bot_avatar_url %>
+            <img src="<%= config.bot_avatar_url %>" alt="<%= bot_name %>">
+          <% else %>
+            <%= bot_name[0..1].upcase %>
+          <% end %>
+        </div>
+        <span><%= bot_name %></span>
+      </div>
+      <button class="emily-chat-widget__close" data-action="click->emily-chat#toggle" aria-label="<%= t('emily.chat.close') %>">&times;</button>
     </div>
 
     <div class="emily-chat-widget__messages" data-emily-chat-target="messages">
@@ -18,16 +37,19 @@
     </div>
 
     <div class="emily-chat-widget__typing" data-emily-chat-target="typing">
-      <%= Emily.configuration&.bot_name || "Emily" %> is typing...
+      <div class="emily-chat-widget__typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <%= t('emily.chat.typing', bot_name: bot_name) %>
     </div>
 
     <div class="emily-chat-widget__input">
       <input type="text"
-             placeholder="Type a message..."
+             placeholder="<%= t('emily.chat.placeholder') %>"
              data-emily-chat-target="input"
              data-action="keydown.enter->emily-chat#send"
              autocomplete="off">
-      <button data-action="click->emily-chat#send">Send</button>
+      <button data-action="click->emily-chat#send"><%= t('emily.chat.send') %></button>
     </div>
   </div>
 </div>

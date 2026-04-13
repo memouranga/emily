@@ -1,0 +1,57 @@
+en:
+  emily:
+    chat:
+      greeting: "Hi! How can I help you today?"
+      placeholder: "Type a message..."
+      send: "Send"
+      typing: "%{bot_name} is typing..."
+      error: "I'm having trouble right now. Would you like me to create a support ticket?"
+      open: "Open chat"
+      close: "Close chat"
+    faqs:
+      title: "Frequently Asked Questions"
+      subtitle: "Find answers to common questions below."
+      learn_more: "Learn more"
+      no_results: "No FAQs available yet."
+    tickets:
+      created: "A support ticket has been created. We'll get back to you soon."
+      subject_default: "Support request"
+      priority:
+        low: "Low"
+        normal: "Normal"
+        high: "High"
+        urgent: "Urgent"
+      status:
+        open: "Open"
+        in_progress: "In Progress"
+        resolved: "Resolved"
+        closed: "Closed"
+    analytics:
+      title: "Emily Analytics"
+      conversations: "Conversations"
+      resolution_rate: "AI Resolution Rate"
+      tickets_created: "Tickets Created"
+      avg_messages: "Avg Messages/Chat"
+      sales: "Sales"
+      support: "Support"
+      active: "Active"
+      resolved_by_ai: "Resolved by AI"
+      escalated: "Escalated"
+      messages: "Messages"
+      total: "Total"
+      from_users: "From Users"
+      from_ai: "From AI"
+      tickets: "Tickets"
+      open: "Open"
+      in_progress: "In Progress"
+      resolved: "Resolved"
+      urgent: "Urgent"
+      period:
+        days_7: "7 days"
+        days_30: "30 days"
+        days_90: "90 days"
+    rating:
+      helpful: "Was this helpful?"
+      thanks: "Thanks for your feedback!"
+    conversation_flow:
+      choose: "How can I help you?"

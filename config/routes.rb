@@ -1,7 +1,9 @@
 Emily::Engine.routes.draw do
   # Chat
   resources :conversations, only: [ :create, :show ] do
-    resources :messages, only: [ :create ]
+    resources :messages, only: [ :create ] do
+      resource :rating, only: [ :create ]
+    end
   end
 
   # Tickets

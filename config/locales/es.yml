@@ -1,0 +1,57 @@
+es:
+  emily:
+    chat:
+      greeting: "¡Hola! ¿En qué te puedo ayudar?"
+      placeholder: "Escribe un mensaje..."
+      send: "Enviar"
+      typing: "%{bot_name} está escribiendo..."
+      error: "Tengo un problema en este momento. ¿Quieres que cree un ticket de soporte?"
+      open: "Abrir chat"
+      close: "Cerrar chat"
+    faqs:
+      title: "Preguntas Frecuentes"
+      subtitle: "Encuentra respuestas a las preguntas más comunes."
+      learn_more: "Saber más"
+      no_results: "Aún no hay preguntas frecuentes."
+    tickets:
+      created: "Se ha creado un ticket de soporte. Te responderemos pronto."
+      subject_default: "Solicitud de soporte"
+      priority:
+        low: "Baja"
+        normal: "Normal"
+        high: "Alta"
+        urgent: "Urgente"
+      status:
+        open: "Abierto"
+        in_progress: "En progreso"
+        resolved: "Resuelto"
+        closed: "Cerrado"
+    analytics:
+      title: "Emily Analytics"
+      conversations: "Conversaciones"
+      resolution_rate: "Tasa de Resolución AI"
+      tickets_created: "Tickets Creados"
+      avg_messages: "Mensajes Prom/Chat"
+      sales: "Ventas"
+      support: "Soporte"
+      active: "Activas"
+      resolved_by_ai: "Resueltas por AI"
+      escalated: "Escaladas"
+      messages: "Mensajes"
+      total: "Total"
+      from_users: "De Usuarios"
+      from_ai: "De AI"
+      tickets: "Tickets"
+      open: "Abiertos"
+      in_progress: "En Progreso"
+      resolved: "Resueltos"
+      urgent: "Urgentes"
+      period:
+        days_7: "7 días"
+        days_30: "30 días"
+        days_90: "90 días"
+    rating:
+      helpful: "¿Te fue útil?"
+      thanks: "¡Gracias por tu feedback!"
+    conversation_flow:
+      choose: "¿En qué te puedo ayudar?"

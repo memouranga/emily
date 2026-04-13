@@ -1,6 +1,6 @@
 module Emily
   module Admin
-    class KnowledgeArticlesController < ApplicationController
+    class KnowledgeArticlesController < BaseController
       def index
         @articles = KnowledgeArticle.order(:category, :position, :title)
         render json: @articles

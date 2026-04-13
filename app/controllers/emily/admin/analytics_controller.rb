@@ -1,6 +1,6 @@
 module Emily
   module Admin
-    class AnalyticsController < ApplicationController
+    class AnalyticsController < BaseController
       def index
         @period = params[:period] || "30"
         @since = @period.to_i.days.ago

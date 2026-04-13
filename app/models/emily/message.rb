@@ -1,6 +1,7 @@
 module Emily
   class Message < ApplicationRecord
     belongs_to :conversation
+    has_one :rating, dependent: :destroy
 
     enum :role, { user: "user", assistant: "assistant" }
 
