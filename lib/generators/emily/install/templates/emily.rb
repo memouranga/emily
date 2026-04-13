@@ -40,4 +40,14 @@ Emily.configure do |config|
   #   }
   # ]
   config.knowledge_providers = []
+
+  # User model class name — Emily uses this to identify authenticated users
+  # Works with any auth system (Devise, custom, etc.) as long as current_user exists
+  config.user_class = "User"
+
+  # Method to get the current user from the controller (default: :current_user)
+  # config.current_user_method = :current_user
+
+  # Layout — nil uses Emily's default, set to "application" to use your app's layout
+  # config.layout = "application"
 end

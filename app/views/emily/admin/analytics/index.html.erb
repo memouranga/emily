@@ -1,0 +1,99 @@
+<div class="emily-analytics">
+  <header class="emily-analytics__header">
+    <h1>Emily Analytics</h1>
+    <nav class="emily-analytics__period">
+      <%= link_to "7 days", emily.admin_analytics_path(period: 7), class: "emily-analytics__period-link #{'emily-analytics__period-link--active' if @period == '7'}" %>
+      <%= link_to "30 days", emily.admin_analytics_path(period: 30), class: "emily-analytics__period-link #{'emily-analytics__period-link--active' if @period == '30'}" %>
+      <%= link_to "90 days", emily.admin_analytics_path(period: 90), class: "emily-analytics__period-link #{'emily-analytics__period-link--active' if @period == '90'}" %>
+    </nav>
+  </header>
+
+  <%# Overview cards %>
+  <section class="emily-analytics__cards">
+    <div class="emily-analytics__card">
+      <span class="emily-analytics__card-value"><%= @stats[:total_conversations] %></span>
+      <span class="emily-analytics__card-label">Conversations</span>
+    </div>
+    <div class="emily-analytics__card">
+      <span class="emily-analytics__card-value"><%= @stats[:resolution_rate] %>%</span>
+      <span class="emily-analytics__card-label">AI Resolution Rate</span>
+    </div>
+    <div class="emily-analytics__card">
+      <span class="emily-analytics__card-value"><%= @stats[:total_tickets] %></span>
+      <span class="emily-analytics__card-label">Tickets Created</span>
+    </div>
+    <div class="emily-analytics__card">
+      <span class="emily-analytics__card-value"><%= @stats[:avg_messages_per_conversation] %></span>
+      <span class="emily-analytics__card-label">Avg Messages/Chat</span>
+    </div>
+  </section>
+
+  <%# Conversations breakdown %>
+  <section class="emily-analytics__section">
+    <h2>Conversations</h2>
+    <div class="emily-analytics__grid">
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Sales</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:sales_conversations] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Support</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:support_conversations] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Active</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:active_conversations] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Resolved by AI</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:resolved_by_ai] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Escalated</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:escalated] %></span>
+      </div>
+    </div>
+  </section>
+
+  <%# Messages %>
+  <section class="emily-analytics__section">
+    <h2>Messages</h2>
+    <div class="emily-analytics__grid">
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Total</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:total_messages] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">From Users</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:user_messages] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">From AI</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:ai_messages] %></span>
+      </div>
+    </div>
+  </section>
+
+  <%# Tickets %>
+  <section class="emily-analytics__section">
+    <h2>Tickets</h2>
+    <div class="emily-analytics__grid">
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Open</span>
+        <span class="emily-analytics__stat-value emily-analytics__stat-value--warning"><%= @stats[:open_tickets] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">In Progress</span>
+        <span class="emily-analytics__stat-value"><%= @stats[:in_progress_tickets] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Resolved</span>
+        <span class="emily-analytics__stat-value emily-analytics__stat-value--success"><%= @stats[:resolved_tickets] %></span>
+      </div>
+      <div class="emily-analytics__stat">
+        <span class="emily-analytics__stat-label">Urgent</span>
+        <span class="emily-analytics__stat-value emily-analytics__stat-value--danger"><%= @stats[:urgent_tickets] %></span>
+      </div>
+    </div>
+  </section>
+</div>

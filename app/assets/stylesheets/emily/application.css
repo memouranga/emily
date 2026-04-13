@@ -267,6 +267,129 @@ details[open] .emily-faqs__question::after {
   display: none;
 }
 
+/* ========== Analytics Dashboard ========== */
+.emily-analytics {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.emily-analytics__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.emily-analytics__header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.emily-analytics__period {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.emily-analytics__period-link {
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-size: 0.85rem;
+  color: #666;
+  background: #f0f0f0;
+  transition: all 0.2s;
+}
+
+.emily-analytics__period-link:hover {
+  background: #e0e0e0;
+}
+
+.emily-analytics__period-link--active {
+  background: #2563eb;
+  color: white;
+}
+
+.emily-analytics__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.emily-analytics__card {
+  background: white;
+  border: 1px solid #e8e8e8;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.emily-analytics__card-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.emily-analytics__card-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.emily-analytics__section {
+  margin-bottom: 2rem;
+}
+
+.emily-analytics__section h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.emily-analytics__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.emily-analytics__stat {
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.emily-analytics__stat-label {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.emily-analytics__stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.emily-analytics__stat-value--success {
+  color: #16a34a;
+}
+
+.emily-analytics__stat-value--warning {
+  color: #d97706;
+}
+
+.emily-analytics__stat-value--danger {
+  color: #dc2626;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .emily-chat-widget__window {

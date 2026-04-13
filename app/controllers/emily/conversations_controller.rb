@@ -32,12 +32,5 @@ module Emily
         }
       }
     end
-
-    private
-
-    def current_emily_user
-      return nil unless defined?(current_user)
-      current_user
-    end
   end
 end

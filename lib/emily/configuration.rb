@@ -10,7 +10,9 @@ module Emily
                   :escalation_enabled,  # Create tickets when AI can't resolve
                   :knowledge_base_path, # Path to markdown knowledge base files
                   :knowledge_providers, # Array of external knowledge sources (lambdas/classes)
-                  :layout               # Layout to use (nil = Emily's own, "application" = host app's)
+                  :layout,              # Layout to use (nil = Emily's own, "application" = host app's)
+                  :user_class,          # User model class name ("User", "Account", etc.)
+                  :current_user_method  # Method to get current user (default: :current_user)
 
     def initialize
       @llm_provider = :anthropic
@@ -24,6 +26,8 @@ module Emily
       @knowledge_base_path = nil
       @knowledge_providers = []
       @layout = nil
+      @user_class = "User"
+      @current_user_method = :current_user
     end
   end
 end
