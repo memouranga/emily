@@ -343,31 +343,29 @@ details[open] .emily-faqs__question::after {
 /* Rating buttons */
 .emily-chat-widget__rating {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
-  padding-left: 0.25rem;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--emily-border);
+  justify-content: flex-end;
 }
 
 .emily-chat-widget__rating button {
   background: none;
-  border: 1px solid var(--emily-border);
-  border-radius: var(--emily-radius-full);
-  padding: 0.2rem 0.5rem;
-  font-size: 0.75rem;
+  border: none;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  color: var(--emily-text-secondary);
+  opacity: 0.5;
   transition: all 0.2s;
 }
 
 .emily-chat-widget__rating button:hover {
-  border-color: var(--emily-primary);
-  color: var(--emily-primary);
+  opacity: 1;
 }
 
 .emily-chat-widget__rating button.rated {
-  background: var(--emily-primary);
-  color: white;
-  border-color: var(--emily-primary);
+  opacity: 1;
 }
 
 /* Conversation flow options */

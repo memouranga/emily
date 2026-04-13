@@ -2,7 +2,7 @@ Emily.configure do |config|
   # === LLM ===
   # Provider and model (via RubyLLM — supports Anthropic, OpenAI, etc.)
   config.llm_provider = :anthropic
-  config.llm_model = "claude-sonnet-4-5-20250514"
+  config.llm_model = "claude-haiku-4-5"
   config.api_key = Rails.application.credentials.dig(:anthropic, :api_key) || ENV["ANTHROPIC_API_KEY"]
 
   # === Bot ===

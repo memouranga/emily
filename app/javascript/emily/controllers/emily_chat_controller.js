@@ -13,6 +13,7 @@ export default class extends Controller {
     this.isOpen = false
     this.flowPath = []
     this.messageIdCounter = 0
+    this.sending = false
   }
 
   disconnect() {
@@ -55,6 +56,9 @@ export default class extends Controller {
       { channel: "Emily::ConversationChannel", conversation_id: this.conversationId },
       {
         received: (data) => {
+          // Skip user messages — already shown locally by send()
+          if (data.role === "user") return
+
           this.hideTyping()
           this.appendMessage(data.role, data.content, data.message_id)
 
@@ -83,21 +87,27 @@ export default class extends Controller {
   }
 
   async send() {
+    if (this.sending) return
     const content = this.inputTarget.value.trim()
     if (!content || !this.conversationId) return
 
+    this.sending = true
     this.inputTarget.value = ""
     this.appendMessage("user", content)
     this.showTyping()
 
-    await fetch(`${this.urlValue}/${this.conversationId}/messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": this.csrfToken
-      },
-      body: JSON.stringify({ content })
-    })
+    try {
+      await fetch(`${this.urlValue}/${this.conversationId}/messages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": this.csrfToken
+        },
+        body: JSON.stringify({ content })
+      })
+    } finally {
+      this.sending = false
+    }
   }
 
   // Conversation flow
@@ -185,16 +195,19 @@ export default class extends Controller {
     div.className = `emily-chat-widget__message emily-chat-widget__message--${role}`
     div.setAttribute("data-message-id", id)
 
-    let html = `<div class="emily-chat-widget__bubble">${this.escapeHtml(content)}</div>`
+    const formatted = role === "assistant" ? this.renderMarkdown(content) : this.escapeHtml(content)
+    let bubbleHtml = formatted
 
-    // Add rating buttons for assistant messages
+    // Add rating buttons inside the bubble for assistant messages
     if (role === "assistant" && messageId) {
-      html += `
+      bubbleHtml += `
         <div class="emily-chat-widget__rating">
           <button data-score="2" onclick="this.closest('[data-controller]').__stimulusController.rate('${id}', 2)">&#128077;</button>
           <button data-score="1" onclick="this.closest('[data-controller]').__stimulusController.rate('${id}', 1)">&#128078;</button>
         </div>`
     }
+
+    let html = `<div class="emily-chat-widget__bubble">${bubbleHtml}</div>`
 
     div.innerHTML = html
     this.messagesTarget.appendChild(div)
@@ -248,6 +261,24 @@ export default class extends Controller {
 
   scrollToBottom() {
     this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight
+  }
+
+  renderMarkdown(text) {
+    let html = this.escapeHtml(text)
+    // Bold: **text**
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Italic: *text*
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    // Inline code: `text`
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>')
+    // Unordered list items: - text
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>')
+    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+    // Line breaks
+    html = html.replace(/\n/g, '<br>')
+    // Clean up <br> inside <ul>
+    html = html.replace(/<ul><br>/g, '<ul>').replace(/<br><\/ul>/g, '</ul>')
+    return html
   }
 
   escapeHtml(text) {

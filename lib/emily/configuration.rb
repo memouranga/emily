@@ -23,7 +23,7 @@ module Emily
 
     def initialize
       @llm_provider = :anthropic
-      @llm_model = "claude-sonnet-4-5-20250514"
+      @llm_model = "claude-haiku-4-5"
       @api_key = nil
       @bot_name = "Emily"
       @bot_greeting = nil  # nil = use i18n default
