@@ -1,0 +1,1 @@
+Rails.application.config.secret_key_base = "test_secret_key_base_for_emily_gem_testing_only_do_not_use_in_production"
