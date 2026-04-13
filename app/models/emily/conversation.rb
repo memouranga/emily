@@ -11,6 +11,8 @@ module Emily
 
     scope :active, -> { where(status: :open) }
 
+    after_create_commit -> { Emily::Events.publish(:conversation_started, conversation: self) }
+
     def visitor?
       user.nil?
     end

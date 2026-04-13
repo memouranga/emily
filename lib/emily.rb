@@ -2,6 +2,7 @@ require "emily/version"
 require "emily/engine"
 require "emily/configuration"
 require "emily/markdown_renderer"
+require "emily/events"
 
 module Emily
   class << self
