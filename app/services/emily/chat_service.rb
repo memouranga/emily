@@ -24,7 +24,7 @@ module Emily
       # 1. Emily's own knowledge articles
       articles = KnowledgeArticle.published.search(query).limit(3)
       articles.each do |a|
-        results << { title: a.title, content: a.content, source: a.source_url }
+        results << { title: a.title, content: a.plain_content, source: a.source_url }
       end
 
       # 2. External knowledge providers (host app models)

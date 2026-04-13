@@ -21,7 +21,7 @@
             <details class="emily-faqs__item">
               <summary class="emily-faqs__question"><%= faq.title %></summary>
               <div class="emily-faqs__answer">
-                <%= simple_format(faq.content) %>
+                <%= faq.rendered_content %>
                 <% if faq.source_url.present? %>
                   <a href="<%= faq.source_url %>" target="_blank" rel="noopener" class="emily-faqs__source">Learn more</a>
                 <% end %>
@@ -35,7 +35,7 @@
         <details class="emily-faqs__item">
           <summary class="emily-faqs__question"><%= faq.title %></summary>
           <div class="emily-faqs__answer">
-            <%= simple_format(faq.content) %>
+            <%= faq.rendered_content %>
             <% if faq.source_url.present? %>
               <a href="<%= faq.source_url %>" target="_blank" rel="noopener" class="emily-faqs__source">Learn more</a>
             <% end %>

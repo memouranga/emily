@@ -1,6 +1,7 @@
 require "emily/version"
 require "emily/engine"
 require "emily/configuration"
+require "emily/markdown_renderer"
 
 module Emily
   class << self

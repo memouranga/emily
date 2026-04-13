@@ -3,6 +3,7 @@ class CreateEmilyKnowledgeArticles < ActiveRecord::Migration[7.1]
     create_table :emily_knowledge_articles do |t|
       t.string :title, null: false
       t.text :content, null: false
+      t.string :content_format, default: "markdown" # plain, markdown, html, json
       t.string :category
       t.string :tags, array: true, default: []
       t.string :source_url          # YouTube link, doc URL, etc.
