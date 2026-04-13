@@ -1,0 +1,33 @@
+<div class="emily-chat-widget" data-controller="emily-chat" data-emily-chat-url-value="<%= emily.conversations_path %>">
+  <%# Toggle button %>
+  <button class="emily-chat-widget__toggle" data-action="click->emily-chat#toggle" aria-label="Open chat">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  </button>
+
+  <%# Chat window %>
+  <div class="emily-chat-widget__window" data-emily-chat-target="window">
+    <div class="emily-chat-widget__header">
+      <span><%= Emily.configuration&.bot_name || "Emily" %></span>
+      <button class="emily-chat-widget__close" data-action="click->emily-chat#toggle" aria-label="Close chat">&times;</button>
+    </div>
+
+    <div class="emily-chat-widget__messages" data-emily-chat-target="messages">
+      <%# Messages rendered here dynamically %>
+    </div>
+
+    <div class="emily-chat-widget__typing" data-emily-chat-target="typing">
+      <%= Emily.configuration&.bot_name || "Emily" %> is typing...
+    </div>
+
+    <div class="emily-chat-widget__input">
+      <input type="text"
+             placeholder="Type a message..."
+             data-emily-chat-target="input"
+             data-action="keydown.enter->emily-chat#send"
+             autocomplete="off">
+      <button data-action="click->emily-chat#send">Send</button>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,8 @@ module Emily
                   :support_prompt,      # System prompt for authenticated users (support mode)
                   :escalation_enabled,  # Create tickets when AI can't resolve
                   :knowledge_base_path, # Path to markdown knowledge base files
-                  :knowledge_providers  # Array of external knowledge sources (lambdas/classes)
+                  :knowledge_providers, # Array of external knowledge sources (lambdas/classes)
+                  :layout               # Layout to use (nil = Emily's own, "application" = host app's)
 
     def initialize
       @llm_provider = :anthropic
@@ -22,6 +23,7 @@ module Emily
       @escalation_enabled = true
       @knowledge_base_path = nil
       @knowledge_providers = []
+      @layout = nil
     end
   end
 end

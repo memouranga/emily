@@ -1,15 +1,277 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
- * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+/* Emily — Default styles (override in host app or run: rails generate emily:views) */
+
+/* ========== Base ========== */
+.emily-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+
+/* ========== FAQs Page ========== */
+.emily-faqs__header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.emily-faqs__header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.emily-faqs__header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.emily-faqs__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.emily-faqs__category-link {
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  background: #f0f0f0;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.emily-faqs__category-link:hover {
+  background: #e0e0e0;
+}
+
+.emily-faqs__section {
+  margin-bottom: 2rem;
+}
+
+.emily-faqs__section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.emily-faqs__item {
+  border: 1px solid #e8e8e8;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.emily-faqs__question {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  font-weight: 500;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.emily-faqs__question:hover {
+  background: #fafafa;
+}
+
+.emily-faqs__question::after {
+  content: "+";
+  font-size: 1.2rem;
+  color: #999;
+  transition: transform 0.2s;
+}
+
+details[open] .emily-faqs__question::after {
+  content: "-";
+}
+
+.emily-faqs__answer {
+  padding: 0 1.25rem 1rem;
+  color: #444;
+}
+
+.emily-faqs__source {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.emily-faqs__source:hover {
+  text-decoration: underline;
+}
+
+/* ========== Chat Widget ========== */
+.emily-chat-widget {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.emily-chat-widget__toggle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.emily-chat-widget__toggle:hover {
+  transform: scale(1.05);
+  background: #1d4ed8;
+}
+
+.emily-chat-widget__window {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 380px;
+  max-height: 500px;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e8e8e8;
+}
+
+.emily-chat-widget__window--open {
+  display: flex;
+}
+
+.emily-chat-widget__header {
+  padding: 1rem 1.25rem;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emily-chat-widget__close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.emily-chat-widget__close:hover {
+  opacity: 1;
+}
+
+.emily-chat-widget__messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  min-height: 300px;
+  max-height: 350px;
+}
+
+.emily-chat-widget__message {
+  margin-bottom: 0.75rem;
+  display: flex;
+}
+
+.emily-chat-widget__message--user {
+  justify-content: flex-end;
+}
+
+.emily-chat-widget__message--assistant {
+  justify-content: flex-start;
+}
+
+.emily-chat-widget__bubble {
+  max-width: 80%;
+  padding: 0.6rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.emily-chat-widget__message--user .emily-chat-widget__bubble {
+  background: #2563eb;
+  color: white;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.emily-chat-widget__message--assistant .emily-chat-widget__bubble {
+  background: #f0f0f0;
+  color: #1a1a1a;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.emily-chat-widget__input {
+  display: flex;
+  padding: 0.75rem;
+  border-top: 1px solid #e8e8e8;
+  gap: 0.5rem;
+}
+
+.emily-chat-widget__input input {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.emily-chat-widget__input input:focus {
+  border-color: #2563eb;
+}
+
+.emily-chat-widget__input button {
+  padding: 0.6rem 1rem;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.emily-chat-widget__input button:hover {
+  background: #1d4ed8;
+}
+
+.emily-chat-widget__typing {
+  padding: 0.5rem 1rem;
+  color: #999;
+  font-size: 0.8rem;
+  font-style: italic;
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .emily-chat-widget__window {
+    width: calc(100vw - 2rem);
+    right: -0.5rem;
+    bottom: 65px;
+  }
+}

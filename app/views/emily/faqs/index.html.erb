@@ -1,0 +1,47 @@
+<div class="emily-faqs">
+  <header class="emily-faqs__header">
+    <h1>Frequently Asked Questions</h1>
+    <p>Find answers to common questions below.</p>
+  </header>
+
+  <% if @categories.any? %>
+    <nav class="emily-faqs__categories">
+      <% @categories.each do |category| %>
+        <a href="#<%= category.parameterize %>" class="emily-faqs__category-link"><%= category %></a>
+      <% end %>
+    </nav>
+  <% end %>
+
+  <div class="emily-faqs__list">
+    <% if @categories.any? %>
+      <% @categories.each do |category| %>
+        <section id="<%= category.parameterize %>" class="emily-faqs__section">
+          <h2 class="emily-faqs__section-title"><%= category %></h2>
+          <% @faqs.select { |f| f.category == category }.each do |faq| %>
+            <details class="emily-faqs__item">
+              <summary class="emily-faqs__question"><%= faq.title %></summary>
+              <div class="emily-faqs__answer">
+                <%= simple_format(faq.content) %>
+                <% if faq.source_url.present? %>
+                  <a href="<%= faq.source_url %>" target="_blank" rel="noopener" class="emily-faqs__source">Learn more</a>
+                <% end %>
+              </div>
+            </details>
+          <% end %>
+        </section>
+      <% end %>
+    <% else %>
+      <% @faqs.each do |faq| %>
+        <details class="emily-faqs__item">
+          <summary class="emily-faqs__question"><%= faq.title %></summary>
+          <div class="emily-faqs__answer">
+            <%= simple_format(faq.content) %>
+            <% if faq.source_url.present? %>
+              <a href="<%= faq.source_url %>" target="_blank" rel="noopener" class="emily-faqs__source">Learn more</a>
+            <% end %>
+          </div>
+        </details>
+      <% end %>
+    <% end %>
+  </div>
+</div>
