@@ -63,13 +63,8 @@ module Emily
 
     def verify_hashcash_if_enabled
       return unless Emily.configuration&.hashcash_enabled?
-      return if authenticated_caller?
+      return if current_emily_user.present?
       check_hashcash
-    end
-
-    def authenticated_caller?
-      user_method = Emily.configuration&.current_user_method || :current_user
-      respond_to?(user_method, true) && send(user_method).present?
     end
   end
 end
