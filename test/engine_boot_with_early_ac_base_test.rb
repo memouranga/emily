@@ -1,25 +1,48 @@
 require "test_helper"
 
-# Regression test: ensures Emily's helper initializer doesn't crash when
-# ActionController::Base is loaded before the engine's initializers run.
-# In production apps (with Devise/Doorkeeper/etc), AC::Base is commonly
-# loaded early, which causes ActiveSupport.on_load blocks to fire
-# synchronously. The bug: helper registration via `helper Emily::ApplicationHelper`
-# failed because Zeitwerk autoload paths weren't ready yet.
+# Regression test: ensures Emily's helper registration works in downstream apps
+# where ActionController::Base is loaded before the engine's initializers run.
+#
+# Historical context: earlier versions used
+#   initializer "emily.helpers" { ActiveSupport.on_load(:action_controller_base) { helper ... } }
+# which fired synchronously in apps that had AC::Base loaded early (Devise/Doorkeeper/etc),
+# BEFORE Zeitwerk had wired the engine's autoload paths. That caused
+# `uninitialized constant Emily::ApplicationHelper` at boot.
+#
+# Current fix: `config.to_prepare` block runs AFTER all initializers and after
+# autoload paths are ready, so constants are resolvable.
 class EngineBootWithEarlyAcBaseTest < ActiveSupport::TestCase
-  test "helper registration works even if ActionController::Base is already loaded" do
-    # Ensure AC::Base is loaded (it already is in most test runs; make it explicit).
-    _ = ActionController::Base
+  test "ActionController::Base is already loaded (downstream-app scenario)" do
+    # In the dummy app AC::Base is loaded during boot, mirroring the real
+    # production scenario where this bug surfaced.
+    assert defined?(ActionController::Base), "ActionController::Base should be loaded"
+  end
 
-    # Simulate re-running the on_load hook (what happens when a downstream app
-    # triggers it synchronously after AC::Base is already resolved).
+  test "Emily::ApplicationHelper is resolvable after boot" do
+    # The core of the original bug: this constant could not be resolved
+    # during the initializer phase. By the time tests run, to_prepare has
+    # fired and the helper must be resolvable via autoload.
     assert_nothing_raised do
-      ActiveSupport.run_load_hooks(:action_controller_base, ActionController::Base)
+      Emily::ApplicationHelper
     end
+    assert defined?(Emily::ApplicationHelper), "Emily::ApplicationHelper should be loaded"
+  end
 
-    # Confirm the helper module is actually registered and callable.
-    assert ActionController::Base._helpers.instance_methods.any? { |m| m.to_s.start_with?("emily_") } ||
-           Emily::Engine.helpers.instance_methods.any?,
-      "Expected at least one Emily helper to be registered or accessible via Engine.helpers"
+  test "Emily::Engine.helpers resolves without raising" do
+    # Engine#helpers internally calls constantize on helper paths. This is
+    # exactly the call site that used to fail during initializer time.
+    # After to_prepare, it must succeed.
+    assert_nothing_raised do
+      Emily::Engine.helpers
+    end
+  end
+
+  test "Emily helpers are registered on ActionController::Base" do
+    # to_prepare should have wired Emily's helpers into AC::Base by the time
+    # the app is ready. Verify the helper module is actually in the ancestry.
+    helper_modules = ActionController::Base._helpers.ancestors
+    assert helper_modules.any? { |m| m.name.to_s.start_with?("Emily") },
+      "Expected an Emily helper module in AC::Base._helpers ancestry, " \
+      "got: #{helper_modules.map(&:name).compact.grep(/Emily|Helper/).inspect}"
   end
 end
