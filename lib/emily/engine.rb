@@ -9,7 +9,7 @@ module Emily
 
     initializer "emily.helpers" do
       ActiveSupport.on_load(:action_controller_base) do
-        helper Emily::ApplicationHelper
+        helper Emily::Engine.helpers
       end
     end
 
