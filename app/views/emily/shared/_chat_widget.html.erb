@@ -1,12 +1,22 @@
 <% config = Emily.configuration %>
 <% bot_name = config&.bot_name || "Emily" %>
 <% position = config&.widget_position || :bottom_right %>
+<% user_method = config&.current_user_method || :current_user %>
+<% visitor = !(respond_to?(user_method) && send(user_method).present?) %>
 
 <div class="emily-chat-widget <%= 'emily-chat-widget--bottom-left' if position == :bottom_left %>"
      data-controller="emily-chat"
      data-emily-chat-url-value="<%= emily.conversations_path(locale: nil) %>"
      data-emily-chat-bot-name-value="<%= bot_name %>"
      data-emily-chat-flow-value="<%= (config&.conversation_flow || {}).to_json %>">
+
+  <% if config&.hashcash_enabled? && visitor %>
+    <%= hidden_field_tag(:hashcash, "", "data-hashcash" => {
+      resource: request.host,
+      bits: config.hashcash_bits,
+      waiting_message: t("active_hashcash.waiting_label", default: "Please wait...")
+    }.to_json) %>
+  <% end %>
 
   <%# Toggle button %>
   <button class="emily-chat-widget__toggle" data-action="click->emily-chat#toggle" aria-label="<%= t('emily.chat.open') %>">
