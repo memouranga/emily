@@ -20,4 +20,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails", ">= 7.1"
   spec.add_dependency "ruby_llm"
+  spec.add_dependency "active_hashcash"
 end
