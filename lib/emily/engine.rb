@@ -7,10 +7,8 @@ module Emily
       app.config.assets.paths << root.join("app/assets/images")
     end
 
-    initializer "emily.helpers" do
-      ActiveSupport.on_load(:action_controller_base) do
-        helper Emily::Engine.helpers
-      end
+    config.to_prepare do
+      ApplicationController.helper(Emily::ApplicationHelper) if defined?(ApplicationController)
     end
 
     initializer "emily.i18n" do
