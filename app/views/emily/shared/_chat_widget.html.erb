@@ -1,8 +1,7 @@
 <% config = Emily.configuration %>
 <% bot_name = config&.bot_name || "Emily" %>
 <% position = config&.widget_position || :bottom_right %>
-<% user_method = config&.current_user_method || :current_user %>
-<% visitor = !(respond_to?(user_method) && send(user_method).present?) %>
+<% visitor = emily_visitor? %>
 
 <div class="emily-chat-widget <%= 'emily-chat-widget--bottom-left' if position == :bottom_left %>"
      data-controller="emily-chat"
@@ -11,9 +10,14 @@
      data-emily-chat-flow-value="<%= (config&.conversation_flow || {}).to_json %>">
 
   <% if config&.hashcash_enabled? && visitor %>
+    <%# Prefer the controller's hashcash_bits (which adds IP-adaptive amplification)
+        when the widget is rendered from a controller that includes ActiveHashcash.
+        Fall back to the configured base value when rendered from a host-app layout
+        whose controller does not respond to :hashcash_bits. %>
+    <% current_bits = respond_to?(:hashcash_bits) ? hashcash_bits : config.hashcash_bits %>
     <%= hidden_field_tag(:hashcash, "", "data-hashcash" => {
       resource: request.host,
-      bits: config.hashcash_bits,
+      bits: current_bits,
       waiting_message: t("active_hashcash.waiting_label", default: "Please wait...")
     }.to_json) %>
   <% end %>
