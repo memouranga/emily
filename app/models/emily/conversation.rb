@@ -9,7 +9,11 @@ module Emily
 
     validates :session_id, presence: true
 
-    serialize :metadata, coder: JSON
+    # Guard against MySQL native JSON columns — `serialize` raises
+    # ColumnNotSerializableError when the column already casts to JSON natively.
+    unless attribute_types["metadata"].is_a?(ActiveRecord::Type::Json)
+      serialize :metadata, coder: JSON
+    end
 
     scope :active, -> { where(status: :open) }
 
