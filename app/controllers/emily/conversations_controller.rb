@@ -6,7 +6,7 @@ module Emily
 
     def create
       conversation = Conversation.create!(
-        session_id: session.id.to_s,
+        session_id: session.id&.to_s.presence || SecureRandom.hex(16),
         user: current_emily_user,
         phase: current_emily_user ? :support : :sales,
         metadata: {
