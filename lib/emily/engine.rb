@@ -12,7 +12,9 @@ module Emily
     end
 
     config.to_prepare do
-      ApplicationController.helper(Emily::ApplicationHelper) if defined?(ApplicationController)
+      if defined?(ActionController::Base)
+        ActionController::Base.helper Emily::Engine.helpers
+      end
     end
 
     initializer "emily.i18n" do
