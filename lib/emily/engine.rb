@@ -27,5 +27,14 @@ module Emily
         end
       end
     end
+
+    # Propagate Emily's configured hashcash base complexity to ActiveHashcash.
+    # The gem's default #hashcash_bits reads ActiveHashcash.bits and applies
+    # IP-adaptive log2 amplification automatically.
+    initializer "emily.hashcash", after: :load_config_initializers do
+      if Emily.configuration&.hashcash_enabled?
+        ActiveHashcash.bits = Emily.configuration.hashcash_bits
+      end
+    end
   end
 end

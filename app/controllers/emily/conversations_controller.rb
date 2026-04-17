@@ -37,21 +37,6 @@ module Emily
       }
     end
 
-    # Override ActiveHashcash#hashcash_bits to honor Emily.configuration.hashcash_bits
-    # while preserving the gem's adaptive IP-based complexity increase.
-    def hashcash_bits
-      configured = Emily.configuration&.hashcash_bits || ActiveHashcash.bits
-      previous_stamp_count = ActiveHashcash::Stamp
-        .where(ip_address: hashcash_ip_address)
-        .where(created_at: 1.day.ago..)
-        .count
-      if previous_stamp_count > 0
-        (configured + Math.log2(previous_stamp_count)).floor
-      else
-        configured
-      end
-    end
-
     # Override ActiveHashcash#hashcash_after_failure to render a JSON 422
     # instead of raising InvalidAuthenticityToken, which is more appropriate
     # for this controller's XHR/JSON clients.
