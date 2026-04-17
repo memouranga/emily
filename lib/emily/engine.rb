@@ -5,8 +5,10 @@ module Emily
     isolate_namespace Emily
 
     initializer "emily.assets" do |app|
-      app.config.assets.paths << root.join("app/assets/stylesheets")
-      app.config.assets.paths << root.join("app/assets/images")
+      if app.config.respond_to?(:assets)
+        app.config.assets.paths << root.join("app/assets/stylesheets")
+        app.config.assets.paths << root.join("app/assets/images")
+      end
     end
 
     config.to_prepare do
