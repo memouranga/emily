@@ -27,21 +27,36 @@ export default class extends Controller {
     }
   }
 
-  mintHashcash() {
-    if (typeof window.Hashcash !== "function") {
-      console.warn("[Emily] Hashcash global missing; anti-bot proof will be empty")
-      this.hashcashReady = true
-      return
-    }
+  async mintHashcash() {
     const raw = this.hashcashTarget.getAttribute("data-hashcash")
     if (!raw) {
       this.hashcashReady = true
       return
     }
+
+    await this.awaitHashcashGlobal()
+    if (typeof window.Hashcash !== "function") {
+      console.warn("[Emily] Hashcash global missing; anti-bot proof will be empty")
+      this.hashcashReady = true
+      return
+    }
+
     const options = JSON.parse(raw)
     window.Hashcash.mint(options.resource, options, (stamp) => {
       this.hashcashTarget.value = stamp.toString()
       this.hashcashReady = true
+    })
+  }
+
+  awaitHashcashGlobal() {
+    return new Promise((resolve) => {
+      const start = performance.now()
+      const poll = () => {
+        if (typeof window.Hashcash === "function") return resolve()
+        if (performance.now() - start > 10000) return resolve()
+        setTimeout(poll, 100)
+      }
+      poll()
     })
   }
 
