@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-  static targets = ["window", "messages", "input", "typing", "badge"]
+  static targets = ["window", "messages", "input", "typing", "badge", "hashcash"]
   static values = { url: String, botName: String, flow: Object }
 
   static storageKey = "emily.conversation_id"
@@ -16,10 +16,49 @@ export default class extends Controller {
     this.flowPath = []
     this.messageIdCounter = 0
     this.sending = false
+    this.hashcashReady = !this.hasHashcashTarget
+
+    if (this.hasHashcashTarget) {
+      this.mintHashcash()
+    }
 
     if (this.conversationId) {
       this.subscribeToChannel()
     }
+  }
+
+  mintHashcash() {
+    if (typeof window.Hashcash !== "function") {
+      console.warn("[Emily] Hashcash global missing; anti-bot proof will be empty")
+      this.hashcashReady = true
+      return
+    }
+    const raw = this.hashcashTarget.getAttribute("data-hashcash")
+    if (!raw) {
+      this.hashcashReady = true
+      return
+    }
+    const options = JSON.parse(raw)
+    window.Hashcash.mint(options.resource, options, (stamp) => {
+      this.hashcashTarget.value = stamp.toString()
+      this.hashcashReady = true
+    })
+  }
+
+  async waitForHashcash() {
+    if (this.hashcashReady) return
+    await new Promise((resolve) => {
+      const start = performance.now()
+      const poll = () => {
+        if (this.hashcashReady || performance.now() - start > 30000) return resolve()
+        setTimeout(poll, 100)
+      }
+      poll()
+    })
+  }
+
+  get hashcashValue() {
+    return this.hasHashcashTarget ? this.hashcashTarget.value : null
   }
 
   disconnect() {
@@ -44,13 +83,19 @@ export default class extends Controller {
   }
 
   async startConversation() {
+    await this.waitForHashcash()
+
+    const payload = { page: window.location.pathname }
+    const hashcash = this.hashcashValue
+    if (hashcash) payload.hashcash = hashcash
+
     const response = await fetch(this.urlValue, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-CSRF-Token": this.csrfToken
       },
-      body: JSON.stringify({ page: window.location.pathname })
+      body: JSON.stringify(payload)
     })
 
     const data = await response.json()

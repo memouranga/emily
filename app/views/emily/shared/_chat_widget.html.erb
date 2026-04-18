@@ -15,11 +15,19 @@
         Fall back to the configured base value when rendered from a host-app layout
         whose controller does not respond to :hashcash_bits. %>
     <% current_bits = respond_to?(:hashcash_bits) ? hashcash_bits : config.hashcash_bits %>
-    <%= hidden_field_tag(:hashcash, "", "data-hashcash" => {
-      resource: request.host,
-      bits: current_bits,
-      waiting_message: t("active_hashcash.waiting_label", default: "Please wait...")
-    }.to_json) %>
+    <%# The input is intentionally rendered without the default `id="hashcash"` so
+        active_hashcash's auto-setup (which assumes a parent <form>) skips it.
+        The Stimulus controller mints the stamp itself and populates this input. %>
+    <%= tag.input type: "hidden", name: "hashcash", value: "",
+          id: nil,
+          data: {
+            emily_chat_target: "hashcash",
+            hashcash: {
+              resource: request.host,
+              bits: current_bits,
+              waiting_message: t("active_hashcash.waiting_label", default: "Please wait...")
+            }.to_json
+          } %>
   <% end %>
 
   <%# Toggle button %>
