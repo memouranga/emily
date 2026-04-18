@@ -5,24 +5,35 @@ module Emily
     before_action :verify_hashcash_if_enabled, only: :create
 
     def create
-      conversation = Conversation.create!(
-        session_id: session.id&.to_s.presence || SecureRandom.hex(16),
-        user: current_emily_user,
-        phase: current_emily_user ? :support : :sales,
-        metadata: {
-          page: params[:page],
-          referrer: request.referrer,
-          user_agent: request.user_agent
-        }
-      )
+      resolved_session_id = emily_session_id
+      target_phase = current_emily_user ? :support : :sales
 
-      # Send greeting
-      conversation.messages.create!(
-        role: :assistant,
-        content: Emily.configuration&.bot_greeting || "Hi! How can I help you?"
-      )
+      conversation = Conversation.active
+        .where(session_id: resolved_session_id, phase: target_phase)
+        .order(created_at: :desc)
+        .first
 
-      render json: { conversation_id: conversation.id }
+      resumed = conversation.present?
+
+      unless resumed
+        conversation = Conversation.create!(
+          session_id: resolved_session_id,
+          user: current_emily_user,
+          phase: target_phase,
+          metadata: {
+            page: params[:page],
+            referrer: request.referrer,
+            user_agent: request.user_agent
+          }
+        )
+
+        conversation.messages.create!(
+          role: :assistant,
+          content: Emily.configuration&.bot_greeting || "Hi! How can I help you?"
+        )
+      end
+
+      render json: { conversation_id: conversation.id, resumed: resumed }
     end
 
     def show
@@ -50,6 +61,10 @@ module Emily
       return unless Emily.configuration&.hashcash_enabled?
       return if current_emily_user.present?
       check_hashcash
+    end
+
+    def emily_session_id
+      session[:emily_session_id] ||= (session.id&.to_s.presence || SecureRandom.hex(16))
     end
   end
 end

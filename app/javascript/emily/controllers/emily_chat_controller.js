@@ -5,8 +5,10 @@ export default class extends Controller {
   static targets = ["window", "messages", "input", "typing", "badge"]
   static values = { url: String, botName: String, flow: Object }
 
+  static storageKey = "emily.conversation_id"
+
   connect() {
-    this.conversationId = null
+    this.conversationId = this.readStoredConversationId()
     this.consumer = createConsumer()
     this.subscription = null
     this.unreadCount = 0
@@ -14,6 +16,10 @@ export default class extends Controller {
     this.flowPath = []
     this.messageIdCounter = 0
     this.sending = false
+
+    if (this.conversationId) {
+      this.subscribeToChannel()
+    }
   }
 
   disconnect() {
@@ -31,6 +37,8 @@ export default class extends Controller {
 
       if (!this.conversationId) {
         this.startConversation()
+      } else if (this.messagesTarget.childElementCount === 0) {
+        this.loadMessages()
       }
     }
   }
@@ -47,8 +55,25 @@ export default class extends Controller {
 
     const data = await response.json()
     this.conversationId = data.conversation_id
+    this.storeConversationId(this.conversationId)
     this.subscribeToChannel()
     this.loadMessages()
+  }
+
+  readStoredConversationId() {
+    try {
+      return window.sessionStorage.getItem(this.constructor.storageKey)
+    } catch (_e) {
+      return null
+    }
+  }
+
+  storeConversationId(id) {
+    try {
+      window.sessionStorage.setItem(this.constructor.storageKey, id)
+    } catch (_e) {
+      // sessionStorage unavailable (private mode, quota); fall back to in-memory only
+    }
   }
 
   subscribeToChannel() {
@@ -73,6 +98,13 @@ export default class extends Controller {
 
   async loadMessages() {
     const response = await fetch(`${this.urlValue}/${this.conversationId}`)
+
+    if (response.status === 404) {
+      this.clearStoredConversation()
+      await this.startConversation()
+      return
+    }
+
     const data = await response.json()
 
     this.messagesTarget.innerHTML = ""
@@ -83,6 +115,17 @@ export default class extends Controller {
     // Show conversation flow if configured and it's a fresh conversation
     if (this.hasFlowValue && this.flowValue.options && data.messages.length <= 1) {
       this.showFlowOptions(this.flowValue)
+    }
+  }
+
+  clearStoredConversation() {
+    this.conversationId = null
+    this.subscription?.unsubscribe()
+    this.subscription = null
+    try {
+      window.sessionStorage.removeItem(this.constructor.storageKey)
+    } catch (_e) {
+      // no-op
     }
   }
 
