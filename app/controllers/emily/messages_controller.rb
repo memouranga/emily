@@ -5,6 +5,14 @@ module Emily
     def create
       conversation = Conversation.find(params[:conversation_id])
 
+      if params[:page].present?
+        metadata = conversation.metadata.is_a?(Hash) ? conversation.metadata.dup : {}
+        if metadata["current_page"] != params[:page]
+          metadata["current_page"] = params[:page]
+          conversation.update_column(:metadata, metadata)
+        end
+      end
+
       # Save user message
       conversation.messages.create!(role: :user, content: params[:content])
 

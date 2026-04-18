@@ -21,7 +21,8 @@ module Emily
                   :rate_limit,
                   :sound_enabled,
                   :anti_bot,
-                  :hashcash_bits
+                  :hashcash_bits,
+                  :user_context_builder
 
     def initialize
       @llm_provider = :anthropic
@@ -46,6 +47,7 @@ module Emily
       @sound_enabled = true
       @anti_bot = :none
       @hashcash_bits = 20
+      @user_context_builder = nil
     end
 
     def hashcash_enabled?

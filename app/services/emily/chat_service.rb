@@ -59,6 +59,8 @@ module Emily
         @config.sales_prompt
       end
 
+      user_context = resolve_user_context
+      system_prompt += "\n\nConversation context:\n#{user_context}" if user_context.present?
       system_prompt += "\n\nRelevant knowledge base articles:\n#{context}" if context.present?
 
       messages = [ { role: "system", content: system_prompt } ]
@@ -68,6 +70,16 @@ module Emily
       end
 
       messages
+    end
+
+    def resolve_user_context
+      builder = @config.user_context_builder
+      return nil unless builder.respond_to?(:call)
+
+      Array(builder.call(@conversation)).compact.reject(&:blank?).join("\n")
+    rescue => e
+      Rails.logger.error("[Emily] user_context_builder error: #{e.class}: #{e.message}")
+      nil
     end
 
     def call_llm(messages)

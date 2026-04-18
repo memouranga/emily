@@ -146,7 +146,7 @@ export default class extends Controller {
           "Content-Type": "application/json",
           "X-CSRF-Token": this.csrfToken
         },
-        body: JSON.stringify({ content })
+        body: JSON.stringify({ content, page: window.location.pathname })
       })
     } finally {
       this.sending = false
@@ -208,7 +208,7 @@ export default class extends Controller {
         "Content-Type": "application/json",
         "X-CSRF-Token": this.csrfToken
       },
-      body: JSON.stringify({ content })
+      body: JSON.stringify({ content, page: window.location.pathname })
     })
   }
 
