@@ -45,6 +45,16 @@ ActiveRecord::Schema.define do
   add_index :emily_tickets, [:resolved_by_type, :resolved_by_id]
   add_index :emily_tickets, [:status, :assignee_id]
 
+  create_table :emily_internal_notes, force: true do |t|
+    t.bigint :ticket_id, null: false
+    t.string :author_type
+    t.bigint :author_id
+    t.text :body, null: false
+    t.timestamps
+  end
+  add_index :emily_internal_notes, :ticket_id
+  add_index :emily_internal_notes, [:author_type, :author_id]
+
   create_table :emily_ratings, force: true do |t|
     t.bigint :message_id, null: false
     t.bigint :conversation_id, null: false
