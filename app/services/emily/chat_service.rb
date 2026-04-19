@@ -88,16 +88,24 @@ module Emily
       system_msg = messages.shift
       chat.with_instructions(system_msg[:content])
 
-      last_response = nil
+      # Support conversations can escalate to a human via a ticket. The LLM
+      # decides when to call the tool based on the support_prompt guidance.
+      chat.with_tool(Emily::Tools::CreateTicket.new(@conversation)) if @conversation.support?
+
+      # Preload all prior turns as history (no LLM call), then send only the
+      # last user message with `ask` to trigger a single completion. RubyLLM
+      # will loop internally to resolve tool calls.
+      last_user = nil
+      messages.each { |m| last_user = m if m[:role] == "user" }
       messages.each do |msg|
-        if msg[:role] == "user"
-          last_response = chat.ask(msg[:content])
-        end
+        next if msg.equal?(last_user)
+        chat.add_message(role: msg[:role].to_sym, content: msg[:content])
       end
 
-      last_response&.content || "I'm sorry, I couldn't process that. Could you try again?"
+      response = last_user ? chat.ask(last_user[:content]) : nil
+      response&.content.presence || "I'm sorry, I couldn't process that. Could you try again?"
     rescue => e
-      Rails.logger.error("[Emily] LLM error: #{e.message}")
+      Rails.logger.error("[Emily] LLM error: #{e.class}: #{e.message}")
       "I'm having trouble right now. Would you like me to create a support ticket?"
     end
   end
