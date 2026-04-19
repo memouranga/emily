@@ -72,5 +72,17 @@ module Emily
     ensure
       ActiveSupport::Notifications.unsubscribe(sub) if sub
     end
+
+    test "stamps first_response_at on the ticket when first human reply lands" do
+      conv = Emily::Conversation.create!(session_id: "fr", phase: :support)
+      ticket = conv.create_ticket!(subject: "s")
+      assert_nil ticket.first_response_at
+      conv.messages.create!(role: "assistant", content: "reply 1", author_type: "User", author_id: 1)
+      assert_not_nil ticket.reload.first_response_at
+      original = ticket.first_response_at
+      sleep 0.01
+      conv.messages.create!(role: "assistant", content: "reply 2", author_type: "User", author_id: 1)
+      assert_equal original.to_i, ticket.reload.first_response_at.to_i
+    end
   end
 end

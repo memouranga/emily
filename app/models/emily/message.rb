@@ -29,10 +29,18 @@ module Emily
       if user?
         Emily::Events.publish(:message_received, message: self, conversation: conversation)
       elsif human_reply?
+        stamp_first_response_on_ticket
         Emily::Events.publish(:agent_replied, message: self, conversation: conversation, ticket: conversation.ticket)
       elsif assistant?
         Emily::Events.publish(:message_sent, message: self, conversation: conversation)
       end
+    end
+
+    def stamp_first_response_on_ticket
+      ticket = conversation.ticket
+      return unless ticket
+      return if ticket.first_response_at.present?
+      ticket.update_column(:first_response_at, created_at || Time.current)
     end
   end
 end

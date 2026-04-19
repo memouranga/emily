@@ -52,5 +52,17 @@ module Emily
       assert_not_nil ticket.reload.resolved_at
       assert_equal 42, ticket.resolved_by_id
     end
+
+    test "clears resolution fields when un-resolving a ticket" do
+      conv = Emily::Conversation.create!(session_id: "u", phase: :support)
+      ticket = conv.create_ticket!(subject: "reopen me", summary: "x")
+      ticket.update!(status: "resolved", resolved_by_type: "User", resolved_by_id: 1)
+      assert_not_nil ticket.reload.resolved_at
+      ticket.update!(status: "in_progress")
+      ticket.reload
+      assert_nil ticket.resolved_at
+      assert_nil ticket.resolved_by_type
+      assert_nil ticket.resolved_by_id
+    end
   end
 end

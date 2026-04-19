@@ -19,8 +19,12 @@ module Emily
     def track_resolution
       return unless will_save_change_to_status?
 
-      if status == "resolved" && resolved_at.blank?
-        self.resolved_at = Time.current
+      if status == "resolved"
+        self.resolved_at ||= Time.current
+      else
+        self.resolved_at = nil
+        self.resolved_by_type = nil
+        self.resolved_by_id = nil
       end
     end
 
