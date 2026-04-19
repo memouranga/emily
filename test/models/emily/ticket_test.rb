@@ -43,5 +43,14 @@ module Emily
       ticket = conv.create_ticket!(subject: "Help")
       assert_equal conv, ticket.conversation
     end
+
+    test "sets resolved_at and resolved_by when status flips to resolved" do
+      conv = Emily::Conversation.create!(session_id: "t", phase: :support)
+      ticket = conv.create_ticket!(subject: "s", summary: "x")
+      ticket.update!(assignee_type: "User", assignee_id: 42)
+      ticket.update!(status: "resolved", resolved_by_type: "User", resolved_by_id: 42)
+      assert_not_nil ticket.reload.resolved_at
+      assert_equal 42, ticket.resolved_by_id
+    end
   end
 end

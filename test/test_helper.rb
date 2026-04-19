@@ -30,8 +30,17 @@ ActiveRecord::Schema.define do
     t.text :summary
     t.string :status, default: "open", null: false
     t.string :priority, default: "normal"
+    t.string :assignee_type
+    t.bigint :assignee_id
+    t.string :resolved_by_type
+    t.bigint :resolved_by_id
+    t.datetime :first_response_at
+    t.datetime :resolved_at
     t.timestamps
   end
+  add_index :emily_tickets, [:assignee_type, :assignee_id]
+  add_index :emily_tickets, [:resolved_by_type, :resolved_by_id]
+  add_index :emily_tickets, [:status, :assignee_id]
 
   create_table :emily_ratings, force: true do |t|
     t.bigint :message_id, null: false
