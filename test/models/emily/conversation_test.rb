@@ -53,5 +53,12 @@ module Emily
       assert_includes Conversation.active, open_conv
       assert_not_includes Conversation.active, resolved_conv
     end
+
+    test "active scope includes escalated conversations so the widget can resume them" do
+      escalated_conv = create_conversation
+      escalated_conv.escalated!
+
+      assert_includes Conversation.active, escalated_conv
+    end
   end
 end

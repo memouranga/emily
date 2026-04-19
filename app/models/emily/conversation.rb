@@ -15,7 +15,10 @@ module Emily
       serialize :metadata, coder: JSON
     end
 
-    scope :active, -> { where(status: :open) }
+    # Escalated conversations must remain resumable: the user still needs to
+    # see the agent's replies in the same widget session. Only `resolved` ends
+    # the chat from the user's perspective.
+    scope :active, -> { where(status: [:open, :escalated]) }
 
     after_create_commit -> { Emily::Events.publish(:conversation_started, conversation: self) }
 
