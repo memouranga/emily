@@ -1,6 +1,7 @@
 module Emily
   class Message < ApplicationRecord
     belongs_to :conversation
+    belongs_to :author, polymorphic: true, optional: true
     has_one :rating, dependent: :destroy
 
     enum :role, { user: "user", assistant: "assistant" }
@@ -10,6 +11,10 @@ module Emily
 
     after_create_commit :broadcast_message
     after_create_commit :publish_event
+
+    def human_reply?
+      assistant? && author_id.present?
+    end
 
     private
 
@@ -21,8 +26,13 @@ module Emily
     end
 
     def publish_event
-      event = user? ? :message_received : :message_sent
-      Emily::Events.publish(event, message: self, conversation: conversation)
+      if user?
+        Emily::Events.publish(:message_received, message: self, conversation: conversation)
+      elsif human_reply?
+        Emily::Events.publish(:agent_replied, message: self, conversation: conversation, ticket: conversation.ticket)
+      elsif assistant?
+        Emily::Events.publish(:message_sent, message: self, conversation: conversation)
+      end
     end
   end
 end

@@ -21,8 +21,11 @@ ActiveRecord::Schema.define do
     t.bigint :conversation_id, null: false
     t.string :role, null: false
     t.text :content, null: false
+    t.string :author_type
+    t.bigint :author_id
     t.timestamps
   end
+  add_index :emily_messages, [:author_type, :author_id]
 
   create_table :emily_tickets, force: true do |t|
     t.bigint :conversation_id, null: false
