@@ -29,7 +29,7 @@ module Emily
 
         conversation.messages.create!(
           role: :assistant,
-          content: Emily.configuration&.bot_greeting || "Hi! How can I help you?"
+          content: resolve_bot_greeting(conversation)
         )
       end
 
@@ -65,6 +65,23 @@ module Emily
 
     def emily_session_id
       session[:emily_session_id] ||= (session.id&.to_s.presence || SecureRandom.hex(16))
+    end
+
+    # bot_greeting may be:
+    # - a String (used verbatim),
+    # - a Proc/lambda/-> accepting the conversation (return value used),
+    # - nil (falls back to I18n key `emily.bot_greeting`, then a hardcoded English string).
+    def resolve_bot_greeting(conversation)
+      greeting = Emily.configuration&.bot_greeting
+
+      case greeting
+      when Proc
+        greeting.call(conversation).to_s
+      when String
+        greeting
+      else
+        I18n.t("emily.chat.greeting", default: "Hi! How can I help you?")
+      end
     end
   end
 end

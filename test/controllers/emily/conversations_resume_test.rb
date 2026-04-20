@@ -21,6 +21,31 @@ module Emily
         "resume must not duplicate the greeting message"
     end
 
+    test "greets in the configured locale when bot_greeting is nil" do
+      original = Emily.configuration.bot_greeting
+      Emily.configuration.bot_greeting = nil
+
+      I18n.with_locale(:es) { post conversations_path }
+
+      conversation_id = JSON.parse(response.body).fetch("conversation_id")
+      greeting = Emily::Conversation.find(conversation_id).messages.first
+      assert_equal "¡Hola! ¿En qué te puedo ayudar?", greeting.content
+    ensure
+      Emily.configuration.bot_greeting = original
+    end
+
+    test "uses bot_greeting callable when configured" do
+      original = Emily.configuration.bot_greeting
+      Emily.configuration.bot_greeting = ->(conv) { "Custom greeting for conv ##{conv.id}" }
+
+      post conversations_path
+      conversation_id = JSON.parse(response.body).fetch("conversation_id")
+      greeting = Emily::Conversation.find(conversation_id).messages.first
+      assert_equal "Custom greeting for conv ##{conversation_id}", greeting.content
+    ensure
+      Emily.configuration.bot_greeting = original
+    end
+
     test "creates a new conversation when the previous one is resolved" do
       post conversations_path
       first_id = JSON.parse(response.body).fetch("conversation_id")
