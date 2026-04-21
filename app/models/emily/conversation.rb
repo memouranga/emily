@@ -11,9 +11,17 @@ module Emily
 
     # Guard against MySQL native JSON columns — `serialize` raises
     # ColumnNotSerializableError when the column already casts to JSON natively.
-    unless attribute_types["metadata"].is_a?(ActiveRecord::Type::Json)
-      serialize :metadata, coder: JSON
+    # Also guard the `attribute_types` call itself: it hits the schema cache,
+    # which raises StatementInvalid in environments where the table does not
+    # exist yet (fresh deploys, `db:migrate` inside a booting production
+    # container, test DBs before load_schema). In that case we fall through
+    # to `serialize` — the right choice for a yet-to-be-created table.
+    begin
+      needs_serialize = !attribute_types["metadata"].is_a?(ActiveRecord::Type::Json)
+    rescue ActiveRecord::StatementInvalid
+      needs_serialize = true
     end
+    serialize :metadata, coder: JSON if needs_serialize
 
     # Escalated conversations must remain resumable: the user still needs to
     # see the agent's replies in the same widget session. Only `resolved` ends
